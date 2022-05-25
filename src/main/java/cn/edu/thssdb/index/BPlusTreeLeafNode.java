@@ -2,7 +2,7 @@ package cn.edu.thssdb.index;
 
 import cn.edu.thssdb.exception.DuplicateKeyException;
 import cn.edu.thssdb.exception.KeyNotExistException;
-import cn.edu.thssdb.utils.Global;
+import cn.edu.thssdb.common.Global;
 
 import java.util.ArrayList;
 import java.util.Collections;

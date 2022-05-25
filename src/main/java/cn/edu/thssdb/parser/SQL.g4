@@ -179,8 +179,8 @@ SUB : '-';
 MUL : '*';
 DIV : '/';
 
-AND : '&&';
-OR : '||';
+AND : 'and';
+OR : 'or';
 
 T_INT : I N T;
 T_LONG : L O N G;

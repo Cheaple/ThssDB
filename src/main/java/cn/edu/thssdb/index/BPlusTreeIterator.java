@@ -1,6 +1,6 @@
 package cn.edu.thssdb.index;
 
-import cn.edu.thssdb.utils.Pair;
+import cn.edu.thssdb.common.Pair;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -29,7 +29,7 @@ public class BPlusTreeIterator<K extends Comparable<K>, V> implements Iterator<P
         if (node instanceof BPlusTreeLeafNode) {
           for (int i = 0; i < node.size(); i++)
             buffer.add(
-                new Pair<>(node.keys.get(i), ((BPlusTreeLeafNode<K, V>) node).values.get(i)));
+                    new Pair<>(node.keys.get(i), ((BPlusTreeLeafNode<K, V>) node).values.get(i)));
           break;
         } else if (node instanceof BPlusTreeInternalNode)
           for (int i = 0; i <= node.size(); i++)

@@ -1,6 +1,6 @@
 package cn.edu.thssdb.index;
 
-import cn.edu.thssdb.utils.Pair;
+import cn.edu.thssdb.common.Pair;
 
 public final class BPlusTree<K extends Comparable<K>, V> implements Iterable<Pair<K, V>> {
 
