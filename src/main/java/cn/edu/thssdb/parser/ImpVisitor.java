@@ -20,7 +20,7 @@ import cn.edu.thssdb.schema.Manager;
  * into the collection of tuples inside the database.
  *
  * We give you a few examples to convert the tree, including create/drop/quit.
- * You need to refer to the codes for parsing the other rooted trees marked TODO.
+ * You need to finish the codes for parsing the other rooted trees marked TODO.
  */
 
 public class ImpVisitor extends SQLBaseVisitor<Object> {
