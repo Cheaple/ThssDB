@@ -8,7 +8,7 @@
   <artifactId>ThssDB</artifactId>
   <version>1.0-SNAPSHOT</version>
   <properties>
-    <thrift.version>0.13.0</thrift.version>
+    <thrift.version>0.12.0</thrift.version>
   </properties>
   <build>
     <plugins>
@@ -207,7 +207,7 @@
         </os>
       </activation>
       <properties>
-        <thrift.download-url>http://artfiles.org/apache.org/thrift/${thrift.version}/thrift-${thrift.version}.exe</thrift.download-url>
+        <thrift.download-url>http://archive.apache.org/dist/thrift/${thrift.version}/thrift-${thrift.version}.exe</thrift.download-url>
         <thrift.executable>thrift-${thrift.version}-win-x86_64.exe</thrift.executable>
         <thrift.skip-making-executable>true</thrift.skip-making-executable>
         <thrift.exec-cmd.executable>echo</thrift.exec-cmd.executable>
