@@ -5,10 +5,15 @@ package cn.edu.thssdb.parser;
 
 import cn.edu.thssdb.exception.DatabaseNotExistException;
 import cn.edu.thssdb.query.QueryResult;
+import cn.edu.thssdb.query.QueryTable;
 import cn.edu.thssdb.schema.Database;
 import cn.edu.thssdb.schema.Manager;
+import cn.edu.thssdb.schema.Table;
+import cn.edu.thssdb.type.ComparerType;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * When use SQL sentence, e.g., "SELECT avg(A) FROM TableX;"
@@ -143,7 +148,54 @@ public class ImpVisitor extends SQLBaseVisitor<Object> {
      表格项查询
      */
     @Override
-    public QueryResult visitSelect_stmt(SQLParser.Select_stmtContext ctx) {return null;}
+    public QueryResult visitSelect_stmt(SQLParser.Select_stmtContext ctx) {
+        QueryResult result;
+        List<String> columnNames = new ArrayList<>();
+        List<QueryTable> queryTableList = new ArrayList<>();
+
+        if (ctx.table_query(0).K_JOIN().size() == 0) {
+            // 单表查询
+            Table table = GetCurrentDB().get(ctx.table_query(0).getText().toLowerCase());
+            queryTableList.add(new QueryTable(table));
+
+            // 判断是否选择所有行
+            if (ctx.result_column().get(0).getText().compareTo("*") != 0) {
+                ctx.result_column().forEach(it -> {
+                    columnNames.add(it.getText().toLowerCase());
+                });
+            }
+            else {
+                table.columns.forEach(it -> {
+                    columnNames.add(it.getColumnName());
+                });
+            }
+            result = new QueryResult(queryTableList, columnNames);
+
+            // WHERE子句过滤
+            // [ WHERE attrName op value ]
+            // 仅包含一个比较运算op，具体为‘<’、‘>’、‘<=’、‘>=’、‘=’、‘<>’
+            if (ctx.K_WHERE() != null) {
+                String attrName = ctx.multiple_condition().condition().getChild(0).getText().toLowerCase();
+                String attrValue = ctx.multiple_condition().condition().getChild(2).getText().toLowerCase();
+                String op = ctx.multiple_condition().condition().getChild(1).getText();
+                result.setFilter(attrName, attrValue, op);
+            }
+
+            result.query();
+        }
+        else {
+            // 多表查询
+
+        }
+        return null;
+
+        /*try {
+
+        } catch (Exception e) {
+            return new QueryResult(e.getMessage());
+        }
+        return null;*/
+    }
 
     /**
      退出

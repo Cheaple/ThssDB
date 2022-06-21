@@ -1,6 +1,9 @@
 package cn.edu.thssdb.query;
 
+import cn.edu.thssdb.schema.MetaInfo;
 import cn.edu.thssdb.schema.Row;
+import cn.edu.thssdb.schema.Table;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -11,20 +14,36 @@ import java.util.LinkedList;
  */
 
 public class QueryTable implements Iterator<Row> {
+  private Iterator<Row> iterator;
 
-  QueryTable() {
+  private String tableName;
+
+  private MetaInfo tableMeta;
+
+  public String getName() {
+    return tableName;
+  }
+
+  public MetaInfo getMetaInfo() {
+    return tableMeta;
+  }
+
+  public QueryTable(Table table) {
     // TODO
+    this.tableName = table.tableName;
+    this.tableMeta = new MetaInfo(table.tableName, table.columns);
+    this.iterator = table.iterator();
   }
 
   @Override
   public boolean hasNext() {
     // TODO
-    return true;
+    return this.iterator.hasNext();
   }
 
   @Override
   public Row next() {
     // TODO
-    return null;
+    return this.iterator.next();
   }
 }
