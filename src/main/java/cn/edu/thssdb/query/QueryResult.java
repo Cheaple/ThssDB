@@ -62,7 +62,10 @@ public class QueryResult {
       Integer tb_idx = findTableIdx(tbList.get(i));
       Integer col_idx = findColIdx(tb_idx, colList.get(i));
       this.columnList.add(new Pair<Integer, Integer>(tb_idx, col_idx));
-      this.columnNames.add(tbList.get(i) + "." + colList.get(i));
+      if (queryTables.size() == 1)
+        this.columnNames.add(colList.get(i));
+      else
+        this.columnNames.add(tbList.get(i) + "." + colList.get(i));
     }
   }
 
@@ -229,56 +232,62 @@ public class QueryResult {
         // 先导入WHERE子句所用表，并进行过滤
         if (filterOp.equals("<")) {
           while (it1.hasNext()) {
-            ArrayList<Cell> entryList = it1.next().getEntries();
+            Row row = it1.next();
+            ArrayList<Cell> entryList = row.getEntries();
             if (entryList.get(filterCol).compareTo(this.filterEntry) == -1) {
-              leftRows.add(new Row(entryList));
+              leftRows.add(new Row(row));
             }
           }
         }
         else if (filterOp.equals(">")) {
           while (it1.hasNext()) {
-            ArrayList<Cell> entryList = it1.next().getEntries();
+            Row row = it1.next();
+            ArrayList<Cell> entryList = row.getEntries();
             if (entryList.get(filterCol).compareTo(this.filterEntry) == 1) {
-              leftRows.add(new Row(entryList));
+              leftRows.add(new Row(row));
             }
           }
         }
         else if (filterOp.equals("<=")) {
           while (it1.hasNext()) {
-            ArrayList<Cell> entryList = it1.next().getEntries();
+            Row row = it1.next();
+            ArrayList<Cell> entryList = row.getEntries();
             if (entryList.get(filterCol).compareTo(this.filterEntry) != 1) {
-              leftRows.add(new Row(entryList));
+              leftRows.add(new Row(row));
             }
           }
         }
         else if (filterOp.equals(">=")) {
           while (it1.hasNext()) {
-            ArrayList<Cell> entryList = it1.next().getEntries();
+            Row row = it1.next();
+            ArrayList<Cell> entryList = row.getEntries();
             if (entryList.get(filterCol).compareTo(this.filterEntry) != -1) {
-              leftRows.add(new Row(entryList));
+              leftRows.add(new Row(row));
             }
           }
         }
         else if (filterOp.equals("=")) {
           while (it1.hasNext()) {
-            ArrayList<Cell> entryList = it1.next().getEntries();
+            Row row = it1.next();
+            ArrayList<Cell> entryList = row.getEntries();
             if (entryList.get(filterCol).equals(this.filterEntry)) {
-              leftRows.add(new Row(entryList));
+              leftRows.add(new Row(row));
             }
           }
         }
         else if (filterOp.equals("<>")) {
           while (it1.hasNext()) {
-            ArrayList<Cell> entryList = it1.next().getEntries();
+            Row row = it1.next();
+            ArrayList<Cell> entryList = row.getEntries();
             if (!entryList.get(filterCol).equals(this.filterEntry)) {
-              leftRows.add(new Row(entryList));
+              leftRows.add(new Row(row));
             }
           }
         }
       }
 
       while (it2.hasNext()) {
-        rightRows.add(it2.next());
+        rightRows.add(new Row(it2.next()));
       }  // 导入另一张表
 
       // 交换左右表
@@ -291,8 +300,8 @@ public class QueryResult {
       // JOIN连接
       if (joinOp.equals("<")) {
         for (int i = 0; i < leftRows.size(); i++) {
+          ArrayList<Cell> leftEntries = leftRows.get(i).getEntries();
           for (int j = 0; j < rightRows.size(); j++) {
-            ArrayList<Cell> leftEntries = leftRows.get(i).getEntries();
             ArrayList<Cell> rightEntries = rightRows.get(j).getEntries();
             Boolean ifJoin = true;
             for (int k = 0; k < this.joinLeftColumns.size(); ++k) {
@@ -316,8 +325,8 @@ public class QueryResult {
       }
       else if (joinOp.equals(">")) {
         for (int i = 0; i < leftRows.size(); i++) {
+          ArrayList<Cell> leftEntries = leftRows.get(i).getEntries();
           for (int j = 0; j < rightRows.size(); j++) {
-            ArrayList<Cell> leftEntries = leftRows.get(i).getEntries();
             ArrayList<Cell> rightEntries = rightRows.get(j).getEntries();
             Boolean ifJoin = true;
             for (int k = 0; k < this.joinLeftColumns.size(); ++k) {
@@ -341,8 +350,8 @@ public class QueryResult {
       }
       else if (joinOp.equals("<=")) {
         for (int i = 0; i < leftRows.size(); i++) {
+          ArrayList<Cell> leftEntries = leftRows.get(i).getEntries();
           for (int j = 0; j < rightRows.size(); j++) {
-            ArrayList<Cell> leftEntries = leftRows.get(i).getEntries();
             ArrayList<Cell> rightEntries = rightRows.get(j).getEntries();
             Boolean ifJoin = true;
             for (int k = 0; k < this.joinLeftColumns.size(); ++k) {
@@ -366,8 +375,8 @@ public class QueryResult {
       }
       else if (joinOp.equals(">=")) {
         for (int i = 0; i < leftRows.size(); i++) {
+          ArrayList<Cell> leftEntries = leftRows.get(i).getEntries();
           for (int j = 0; j < rightRows.size(); j++) {
-            ArrayList<Cell> leftEntries = leftRows.get(i).getEntries();
             ArrayList<Cell> rightEntries = rightRows.get(j).getEntries();
             Boolean ifJoin = true;
             for (int k = 0; k < this.joinLeftColumns.size(); ++k) {
@@ -391,12 +400,12 @@ public class QueryResult {
       }
       else if (joinOp.equals("=")) {
         for (int i = 0; i < leftRows.size(); i++) {
+          ArrayList<Cell> leftEntries = leftRows.get(i).getEntries();
           for (int j = 0; j < rightRows.size(); j++) {
-            ArrayList<Cell> leftEntries = leftRows.get(i).getEntries();
             ArrayList<Cell> rightEntries = rightRows.get(j).getEntries();
             Boolean ifJoin = true;
             for (int k = 0; k < this.joinLeftColumns.size(); ++k) {
-              if (!leftEntries.get(this.joinLeftColumns.get(k)).equals(rightEntries.get(this.joinRightColumns.get(k)))) {
+              if (leftEntries.get(this.joinLeftColumns.get(k)).compareTo(rightEntries.get(this.joinRightColumns.get(k))) != 0) {
                 ifJoin = false;
                 break;
               }
@@ -416,12 +425,12 @@ public class QueryResult {
       }
       else if (joinOp.equals("<>")) {
         for (int i = 0; i < leftRows.size(); i++) {
+          ArrayList<Cell> leftEntries = leftRows.get(i).getEntries();
           for (int j = 0; j < rightRows.size(); j++) {
-            ArrayList<Cell> leftEntries = leftRows.get(i).getEntries();
             ArrayList<Cell> rightEntries = rightRows.get(j).getEntries();
             Boolean ifJoin = true;
             for (int k = 0; k < this.joinLeftColumns.size(); ++k) {
-              if (leftEntries.get(this.joinLeftColumns.get(k)).equals(rightEntries.get(this.joinRightColumns.get(k)))) {
+              if (leftEntries.get(this.joinLeftColumns.get(k)).compareTo(rightEntries.get(this.joinRightColumns.get(k))) == 0) {
                 ifJoin = false;
                 break;
               }

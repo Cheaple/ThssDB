@@ -193,8 +193,16 @@ public class Table implements Iterable<Row> {
     }
   }
 
+    public int findColumnIdx(String name) {
+      for (int i = 0; i < this.columns.size(); ++i) {
+        if (this.columns.get(i).getColumnName().equals(name))
+          return i;
+      }
+      return -1;
+    }
 
-  // Operations involving logic expressions.
+
+    // Operations involving logic expressions.
 
 
 
@@ -261,6 +269,10 @@ public class Table implements Iterable<Row> {
     StringBuilder s = new StringBuilder("Table " + this.tableName + ": ");
     for (Column column : this.columns) s.append("\t(").append(column.toString()).append(')');
     return s.toString() + "\n";
+  }
+
+  public int getPrimaryIndex(){
+    return primaryIndex;
   }
 
 }
