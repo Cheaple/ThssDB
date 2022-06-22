@@ -20,6 +20,8 @@ public class QueryTable implements Iterator<Row> {
 
   private MetaInfo tableMeta;
 
+  private Table table;
+
   public String getName() {
     return tableName;
   }
@@ -32,6 +34,7 @@ public class QueryTable implements Iterator<Row> {
     // TODO
     this.tableName = table.tableName;
     this.tableMeta = new MetaInfo(table.tableName, table.columns);
+
     this.iterator = table.iterator();
   }
 

@@ -28,6 +28,12 @@ public class MetaInfo {
     return -1;
   }
 
+  public Column getColumn(int index) {
+    if (index < 0 || index >= columns.size())
+      return null;
+    return columns.get(index);
+  }
+
   public String getColumnName(int index) {
     if (index < 0 || index >= columns.size())
       return null;
