@@ -5,6 +5,7 @@ import cn.edu.thssdb.common.Pair;
 import cn.edu.thssdb.exception.KeyNotExistException;
 import cn.edu.thssdb.exception.TableNotExistException;
 import cn.edu.thssdb.schema.Cell;
+import cn.edu.thssdb.schema.MetaInfo;
 import cn.edu.thssdb.schema.Row;
 import cn.edu.thssdb.type.ColumnType;
 import cn.edu.thssdb.type.QueryResultType;
@@ -115,7 +116,19 @@ public class QueryResult {
   /** 自然连接 */
   public void setJoin() {
     this.ifJoinOn = 0;  // 设置为自然连接
-    // TODO: 找出两表的同名列
+    this.joinOp = "=";
+
+    // 找出两表的同名列
+    MetaInfo meta1 = queryTables.get(0).getMetaInfo();
+    MetaInfo meta2 = queryTables.get(1).getMetaInfo();
+    for (int i = 0; i < meta1.getColumnCnt(); ++i) {
+      for (int j = 0; j < meta2.getColumnCnt(); ++j) {
+        if (meta1.getColumnName(i).equals(meta2.getColumnName(j))) {
+          this.joinLeftColumns.add(i);
+          this.joinRightColumns.add(j);
+        }
+      }
+    }
   }
 
   /**

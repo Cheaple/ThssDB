@@ -34,6 +34,10 @@ public class MetaInfo {
     return columns.get(index);
   }
 
+  public Integer getColumnCnt() {
+    return columns.size();
+  }
+
   public String getColumnName(int index) {
     if (index < 0 || index >= columns.size())
       return null;
