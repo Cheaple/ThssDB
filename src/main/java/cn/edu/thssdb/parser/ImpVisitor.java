@@ -499,7 +499,10 @@ public class ImpVisitor extends SQLBaseVisitor<Object> {
             // 选择属性
             if (ctx.result_column().get(0).getText().compareTo("*") != 0) {
                 ctx.result_column().forEach(it -> {
-                    tableNameList.add(it.column_full_name().table_name().getText().toLowerCase());
+                    if (it.column_full_name().table_name() == null)
+                        tableNameList.add(ctx.table_query(0).table_name(0).getText().toLowerCase());
+                    else
+                        tableNameList.add(it.column_full_name().table_name().getText().toLowerCase());
                     columnNameList.add(it.column_full_name().column_name().getText().toLowerCase());
                 });
             }
